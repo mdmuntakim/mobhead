@@ -19,6 +19,12 @@ import java.util.Map;
  * {@code mobheads.tsv}, {@code AbilityTable} and {@code MobHeadRegistry}; edit
  * those sources and regenerate instead of editing this file.  The per-mob
  * classes in this package are typed accessors for the same entries.</p>
+ *
+ * <p>Paper's plugin class loader refuses to define classes whose name starts
+ * with {@code net.minecraft.}, so the packaged jar relocates this package to
+ * {@code com.mdmuntakim.mobhead.internal.entity}.  The source tree keeps the
+ * requested {@code net.minecraft.entity} package; only the build output is
+ * relocated.</p>
  */
 public final class Head {
 

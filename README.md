@@ -102,6 +102,12 @@ The plugin merges this embedded table into its runtime catalogue, so a jar
 built without `mobheads.tsv` still has every texture. The TSV stays the
 editable copy and still wins when both are present.
 
+Paper's `PluginClassLoader` refuses to define any class whose name starts with
+`net.minecraft.` (see `findClass` in `PluginClassLoader`). The source keeps the
+requested `net.minecraft.entity` package, but the packaged jar relocates it to
+`com.mdmuntakim.mobhead.internal.entity` with the Maven Shade plugin, which is
+why the plugin loads on Paper. The build check below asserts the relocation.
+
 After editing the TSV or the ability table, regenerate the package:
 
 ```bash
@@ -131,7 +137,9 @@ mvn -B verify
 # target/mobhead-26.3.jar
 ```
 
-or `./build.sh`.
+or `./build.sh`, which also runs `tools/verify-jar.sh`. That check fails if the
+jar still contains `net.minecraft.*` (Paper would refuse to load it) or if the
+relocated head table is missing.
 
 Tests cover the tier scaling, ability formatting, catalogue parsing and item
 identity helpers. The live server check is done with Paper 26.3 build 256 on
