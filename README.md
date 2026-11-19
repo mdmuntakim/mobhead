@@ -78,6 +78,40 @@ show-ability-lore: true
 skeleton/creeper/piglin/dragon head from the drops of the same mob, so one kill
 never produces two heads. Set it to `false` to keep the vanilla drop as well.
 
+## The `net.minecraft.entity.Head` table
+
+The complete table also lives in code, in the `net.minecraft.entity` package:
+
+```
+src/main/java/net/minecraft/entity/Head.java          # every mob, texture, potions, abilities
+src/main/java/net/minecraft/entity/ZombieHead.java    # typed accessor, one per mob
+...                                                   # 90 accessors + package-info
+```
+
+`Head` is generated from `mobheads.tsv`, `AbilityTable` and `MobHeadRegistry`:
+
+* `Head.all()` returns all 90 mobs in catalogue order.
+* `Head.of("zombie")`, `Head.of("minecraft:zombie")` and
+  `Head.byName("Zombie")` look an entry up.
+* An entry exposes the entity id, the display name, the category, the head
+  texture, the vanilla skull item (for the six vanilla heads), the tier, the
+  potion effects and the event driven extras (`retaliation:fire`,
+  `explosion_immune`, `health:16`, ...).
+
+The plugin merges this embedded table into its runtime catalogue, so a jar
+built without `mobheads.tsv` still has every texture. The TSV stays the
+editable copy and still wins when both are present.
+
+After editing the TSV or the ability table, regenerate the package:
+
+```bash
+python3 tools/generate-entity-package.py
+mvn -B verify
+```
+
+`HeadTableConsistencyTest` fails when the generated table and `AbilityTable`
+disagree on a tier, a potion effect or an external ability.
+
 ## How the heads are built
 
 * The six heads that exist as vanilla items (zombie, skeleton, wither skeleton,

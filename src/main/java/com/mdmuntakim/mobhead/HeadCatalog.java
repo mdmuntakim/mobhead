@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import net.minecraft.entity.Head;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -32,17 +33,27 @@ public final class HeadCatalog {
     }
 
     public static HeadCatalog load(JavaPlugin plugin) {
+        // The embedded net.minecraft.entity.Head table is the primary source,
+        // so the catalogue is complete even when the resource is missing.  The
+        // committed TSV is merged on top and stays the editable copy.
+        Map<String, Texture> merged = new LinkedHashMap<>();
+        for (Head.Entry entry : Head.all()) {
+            if (entry.hasTexture()) {
+                merged.put(entry.id(), new Texture(entry.texture(), entry.name(), entry.category()));
+            }
+        }
         try (InputStream stream = plugin.getResource("mobheads.tsv")) {
             if (stream == null) {
-                plugin.getLogger().warning("mobheads.tsv is not packaged in the jar; no custom textures available.");
-                return empty();
+                plugin.getLogger().warning("mobheads.tsv is not packaged in the jar; using the embedded entity table.");
+                return new HeadCatalog(merged);
             }
             try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                return parse(new BufferedReader(reader));
+                merged.putAll(parse(new BufferedReader(reader)).textures());
+                return new HeadCatalog(merged);
             }
         } catch (IOException exception) {
             plugin.getLogger().warning("Could not read mobheads.tsv: " + exception.getMessage());
-            return empty();
+            return new HeadCatalog(merged);
         }
     }
 
