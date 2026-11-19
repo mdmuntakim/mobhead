@@ -4,4 +4,5 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 mvn -B verify
+tools/verify-jar.sh
 printf 'built %s\n' "$(pwd)/target/mobhead-26.3.jar"

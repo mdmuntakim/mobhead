@@ -65,6 +65,35 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.5.2</version>
       </plugin>
+      <!--
+        Paper's PluginClassLoader refuses to define any class whose name starts
+        with "net.minecraft." (or "org.bukkit.").  The source package requested
+        for the head table is net.minecraft.entity, so the packaged jar
+        relocates it into the plugin's own namespace.  The source tree keeps
+        the requested package; only the build output is relocated.
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <relocations>
+                <relocation>
+                  <pattern>net.minecraft.entity</pattern>
+                  <shadedPattern>com.mdmuntakim.mobhead.internal.entity</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
