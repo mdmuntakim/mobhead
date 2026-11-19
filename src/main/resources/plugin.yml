@@ -1,0 +1,26 @@
+name: MobHead
+version: '26.3'
+main: com.mdmuntakim.mobhead.MobHeadPlugin
+api-version: '26.3'
+description: Every Minecraft mob head, with tiered abilities when worn in the helmet slot.
+author: mdmuntakim
+website: https://github.com/mdmuntakim/mobhead
+folia-supported: false
+
+commands:
+  mobhead:
+    description: Give, inspect and list MobHead heads.
+    usage: /mobhead <give|list|info|selftest|reload>
+    aliases: [mh]
+    permission: mobhead.command
+
+permissions:
+  mobhead.command:
+    description: Use the /mobhead command.
+    default: op
+  mobhead.give:
+    description: Give mob heads to players.
+    default: op
+  mobhead.reload:
+    description: Reload the MobHead configuration.
+    default: op

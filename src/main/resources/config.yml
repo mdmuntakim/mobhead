@@ -1,0 +1,25 @@
+# MobHead configuration, Paper 26.3
+
+# Heads are worn in the helmet slot. Their effects are refreshed while worn.
+abilities:
+  enabled: true
+  # How often the worn head is checked, in ticks (20 ticks = 1 second).
+  refresh-ticks: 20
+  # Effect duration in ticks. It is longer than the refresh interval so the
+  # effect never runs out while the head stays equipped.
+  effect-duration-ticks: 100
+
+# Chance multiplier for the head drop of a mob killed by a player.
+# Each tier has its own base chance:
+#   no ability 2%, common 5%, uncommon 10%, rare 25%, epic 50%, legendary 100%
+drop-chance-multiplier: 1.0
+# Added to the drop chance per Looting level (0.01 = 1 percentage point).
+looting-bonus-per-level: 0.01
+
+# Remove the vanilla head item (zombie head, skeleton skull, wither skeleton
+# skull, creeper head, piglin head, dragon head) from the drops of a mob that
+# MobHead also drops a head for, so a single kill never yields two heads.
+suppress-vanilla-skull-drops: true
+
+# Show the ability summary in the item lore.
+show-ability-lore: true

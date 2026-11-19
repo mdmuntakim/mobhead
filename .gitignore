@@ -1,0 +1,8 @@
+target/
+.cache/
+*.log
+server/
+run/
+.idea/
+*.iml
+.vscode/
